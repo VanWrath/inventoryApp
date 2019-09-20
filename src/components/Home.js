@@ -3,25 +3,13 @@ import { StyleSheet, Text, View, Button, FlatList, TouchableOpacity, Image } fro
 import Collection from '../classes/Collection';
 import ListItem from './ListItem';
 
-//Component to render each collection in the list of collections
-/*class MyListItem extends React.Component {
-	//calls the 'goToList' function and passes in selected collection
-	onPress = () => {
-		this.props.onPress(this.props.collection, this.props.index);
-	};
-
-	render() {
-		//console.log('Name: ' + this.props.collection.name, 'id: ' + this.props.collection._id);
-		return (
-			<TouchableOpacity style={styles.listItem} onPress={this.onPress}>
-				<Text style={styles.listtext}>{this.props.collection.name}</Text>
-			</TouchableOpacity>
-		);
-	}
-}*/
+import { loadData } from '../reducers/reducer';
 
 //First Component the user sees. Displays the collecitons the user has made.
 export default class Home extends Component {
+	componentDidMount() {
+		this.props.loadData();
+	}
 	//sets up navigation options for current screen
 	static navigationOptions = {
 		headerTitle : 'Inventory'

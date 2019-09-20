@@ -12,6 +12,9 @@ import Collection from './src/classes/Collection';
 import Item from './src/classes/Item';
 import AsyncStorage from '@react-native-community/async-storage';
 import NotifService from './src/services/NotifService';
+import { createStore } from 'redux';
+import { Provider, useDispatch } from 'react-redux';
+import reducers from './src/reducers/reducer';
 
 import TestNotif from './src/test/TestNotif';
 import TestList from './src/test/TestList';
@@ -22,12 +25,15 @@ const instructions = Platform.select({
 });
 
 const AppContainer = createAppContainer(AppNavigator);
+const dispatch = useDispatch();
+
+let store = createStore(reducers);
 
 export default class inventoryApp extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			lists        : [],
+			store        : store,
 			ftRepurchase : false
 		};
 
@@ -75,9 +81,14 @@ export default class inventoryApp extends Component {
 	getData = async () => {
 		try {
 			const value = await AsyncStorage.getItem('data');
-			if (value !== null) {
+			if (value && value.length) {
 				//console.log('Loading data:' + value);
-				this.setState({ lists: JSON.parse(value) });
+				//dispatch call instead for redux
+				let initialStore = JSON.parse(value);
+				dispatch(loadData(initialStore));
+				//this.setState({ lists: JSON.parse(value) });
+			} else {
+				this.setState({ store: store });
 			}
 		} catch (e) {
 			console.error(e);
