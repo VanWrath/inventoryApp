@@ -2,6 +2,7 @@ import Collection from '../classes/Collection';
 import Item from '../classes/Item';
 //Actions
 export const LOAD_DATA = 'LOAD_DATA';
+export const STORE_DATA = 'STORE_DATA';
 export const GET_LIST = 'GET_LIST';
 export const GET_ITEM = 'GET_ITEM';
 export const ADD_LIST = 'ADD_LIST';
@@ -23,14 +24,16 @@ export default function reducer(state = initialState, action) {
 			};
 		case ADD_LIST:
 			return {
-				state : {
-					lists : [ ...lists, new collection(action.name) ]
-				}
+				lists : [ ...state.lists, action.list ]
 			};
 		case GET_LIST:
 			return {
 				...state,
 				list : action.id
+			};
+		case DELETE_LIST:
+			return {
+				lists : state.lists.filter((list) => list._id !== action.id)
 			};
 		default:
 			return state;
@@ -45,10 +48,10 @@ export function loadData(data) {
 	};
 }
 
-export function addList(name) {
+export function addList(list) {
 	return {
 		type : ADD_LIST,
-		name : name
+		list
 	};
 }
 
@@ -72,8 +75,8 @@ export function updateItem(listIndex, item) {
 	return { type: UPDATE_ITEM, listIndex, item };
 }
 
-export function deleteList(index) {
-	return { type: DELETE_LIST, index };
+export function deleteList(id) {
+	return { type: DELETE_LIST, id };
 }
 
 export function deleteItem(listIndex, id) {

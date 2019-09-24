@@ -12,9 +12,11 @@ import Collection from './src/classes/Collection';
 import Item from './src/classes/Item';
 import AsyncStorage from '@react-native-community/async-storage';
 import NotifService from './src/services/NotifService';
-import { createStore } from 'redux';
-import { Provider, useDispatch } from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
+import { Provider, connect } from 'react-redux';
+import thunk from 'redux-thunk';
 import reducers from './src/reducers/reducer';
+import { loadData } from './src/reducers/reducer';
 
 import TestNotif from './src/test/TestNotif';
 import TestList from './src/test/TestList';
@@ -25,14 +27,14 @@ const instructions = Platform.select({
 });
 
 const AppContainer = createAppContainer(AppNavigator);
-const dispatch = useDispatch();
-
-let store = createStore(reducers);
+const middleware = [ thunk ];
+const store = createStore(reducers, applyMiddleware(...middleware));
 
 export default class inventoryApp extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			lists        : [],
 			store        : store,
 			ftRepurchase : false
 		};
@@ -41,7 +43,8 @@ export default class inventoryApp extends Component {
 	}
 
 	componentWillMount() {
-		/*	this.addList('Games');
+		/*console.log('Setting up state.');
+		this.addList('Games');
 		this.addList('Wine');
 		this.addList('Makeup');
 		this.addList('Technology');
@@ -58,20 +61,18 @@ export default class inventoryApp extends Component {
 		item.setAcquisitionDate(acqireDate);
 		let img = require('./images/KHI-5_cover.jpg');
 		item.setPhoto(img);
-		this.state.lists[0].addItem(item);*/
-		this.getData();
-	}
+		this.state.lists[0].addItem(item);
 
-	componentDidUpdate(prevProp, prevState) {
-		if (prevState !== this.state) {
-			this.forceUpdate();
-		}
+		this.storeData();
+		this.state = {};
+		console.log('cleared state');*/
+		//this.getData();
 	}
 
 	//store data to make it persistent
-	storeData = async () => {
+	storeData = async (data) => {
 		try {
-			await AsyncStorage.setItem('data', JSON.stringify(this.state.lists));
+			await AsyncStorage.setItem('data', JSON.stringify(data));
 		} catch (e) {
 			console.error(e);
 		}
@@ -85,10 +86,8 @@ export default class inventoryApp extends Component {
 				//console.log('Loading data:' + value);
 				//dispatch call instead for redux
 				let initialStore = JSON.parse(value);
-				dispatch(loadData(initialStore));
+				this.props.loadData(initialStore);
 				//this.setState({ lists: JSON.parse(value) });
-			} else {
-				this.setState({ store: store });
 			}
 		} catch (e) {
 			console.error(e);
@@ -164,7 +163,7 @@ export default class inventoryApp extends Component {
 				'Setting repurchase to true will set a notification reminder to repurchase the item when the expiration date is near.',
 				[ { text: 'OK', onPress: () => console.log('OK Pressed') } ]
 			);
-			//this.storeData();
+			this.storeData();
 		}
 	};
 
@@ -192,22 +191,25 @@ export default class inventoryApp extends Component {
 	render() {
 		//console.log('state:' + JSON.stringify(this.state));
 		return (
-			<AppContainer
-				screenProps={{
-					list                : this.state.lists,
-					addList             : this.addList,
-					addToList           : this.addToList,
-					deleteList          : this.deleteList,
-					deleteItem          : this.deleteItem,
-					updateList          : this.updateList,
-					updateItem          : this.updateItem,
-					scheduleNotif       : this.scheduleNotif,
-					firstTimeRepurchase : this.firstTimeRepurchase
-				}}
-			/>
+			<Provider store={store}>
+				<AppContainer
+					screenProps={{
+						list                : this.state.lists,
+						addList             : this.addList,
+						addToList           : this.addToList,
+						deleteList          : this.deleteList,
+						deleteItem          : this.deleteItem,
+						updateList          : this.updateList,
+						updateItem          : this.updateItem,
+						scheduleNotif       : this.scheduleNotif,
+						firstTimeRepurchase : this.firstTimeRepurchase
+					}}
+				/>
+			</Provider>
 		);
 	}
 }
+
 /*
 
 */

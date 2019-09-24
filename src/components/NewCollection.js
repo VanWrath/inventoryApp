@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, Button, TextInput, Alert } from 'react-native';
+import Colleciton from '../classes/Collection';
+import { addList } from '../reducers/reducer';
+import { connect } from 'react-redux';
+import Collection from '../classes/Collection';
 
 //Component renders screen to take in user input to create a new collection.
-export default class NewCollection extends Component {
+class NewCollection extends Component {
 	constructor(props) {
 		super(props);
 		this.state = { text: '' };
@@ -20,7 +24,10 @@ export default class NewCollection extends Component {
 	//function adds new item to current list and navigates back to previous screen.
 	submit = () => {
 		if (this.state.text.length > 0) {
-			this.props.screenProps.addList(this.state.text);
+			//this.props.screenProps.addList(this.state.text);
+			let newList = new Collection(this.state.text);
+			this.props.addList(newList);
+			//save data to storage
 			this.props.navigation.goBack();
 		} else {
 			Alert.alert('Warning', 'Enter a name for your new collection', [
@@ -41,7 +48,11 @@ export default class NewCollection extends Component {
 					/>
 				</View>
 
-				<Button title="Add" onPress={this.submit} color="#33cc33" />
+				<Button
+					title="Add"
+					onPress={this.submit}
+					//color="#33cc33"
+				/>
 			</View>
 		);
 	}
@@ -66,3 +77,12 @@ const styles = StyleSheet.create({
 		backgroundColor : '#cccccc'
 	}
 });
+
+//const mapStateToProps = (state) => {};
+
+//maps dispatch functions to props
+const mapDispatchToProps = {
+	addList
+};
+
+export default connect(null, mapDispatchToProps)(NewCollection);

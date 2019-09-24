@@ -14,9 +14,11 @@ import {
 import RNModal from 'react-native-modal';
 import ListItem from './ListItem';
 import GridItem from './GridItem';
+import { connect } from 'react-redux';
+import { deleteList } from '../reducers/reducer';
 
 //Component to display collection of items
-export default class List extends Component {
+class List extends Component {
 	constructor(props) {
 		super(props);
 
@@ -25,7 +27,9 @@ export default class List extends Component {
 			showOptions : false,
 			showFilter  : false,
 			listIndex   : this.props.navigation.getParam('index'),
-			filterType  : 'brand'
+			filterType  : 'brand',
+			filterInput : '',
+			outputList  : []
 		};
 		this.filterInput;
 	}
@@ -158,13 +162,15 @@ export default class List extends Component {
 
 	//delete list from collections
 	delete = () => {
+		let id = this.props.navigation.getParam('id');
 		this.toggleOptions();
 		Alert.alert('Delete this list?', 'You will not be able to get this list back', [
 			{ text: 'CANCEL', onPress: () => console.log('cancel pressed.') },
 			{
 				text    : 'DELETE',
 				onPress : () => {
-					this.props.screenProps.deleteList(this.state.listIndex);
+					//this.props.screenProps.deleteList(this.state.listIndex);
+					this.props.deleteList(id);
 					this.props.navigation.goBack();
 				}
 			}
@@ -178,10 +184,11 @@ export default class List extends Component {
 	};
 
 	filter = (input) => {
-		this.filterInput = input;
+		//this.filterInput = input;
+		this.setState({ filterInput: input });
 		var array = this.state.list;
-		var filterArr = this.filterItems(array, this.filterInput);
-		if (this.filterInput.length > 0) {
+		var filterArr = this.filterItems(array, this.state.filterInput);
+		if (this.state.filterInput.length > 0) {
 			this.setState({ outputList: filterArr });
 		} else {
 			this.setState({ outputList: this.state.list });
@@ -197,7 +204,7 @@ export default class List extends Component {
 		// console.log('--------------------------------------');
 		//console.log('List props: ' + JSON.stringify(collection));
 		//console.log('--------------------------------------');
-		this.setState({ outputList });
+		//this.setState({ outputList });
 
 		return (
 			<View style={styles.container}>
@@ -359,3 +366,17 @@ const styles = StyleSheet.create({
 		//flexDirection   : 'row'
 	}
 });
+
+const mapStateToProps = (state) => {
+	console.log('mapping to props: ' + JSON.stringify(state));
+	let storedCollections = state.lists.map((list) => ({ key: list._id, ...list }));
+	return {
+		lists : storedCollections
+	};
+};
+
+const mapDispatchToProps = {
+	deleteList
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(List);
