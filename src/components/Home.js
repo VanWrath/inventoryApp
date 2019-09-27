@@ -53,7 +53,8 @@ class Home extends Component {
 		console.log('item id:' + item._id);
 		this.props.navigation.navigate('List', {
 			collection : item,
-			id         : item._id
+			id         : item._id,
+			name       : item.name
 		});
 	};
 

@@ -12,9 +12,12 @@ import Collection from './src/classes/Collection';
 import Item from './src/classes/Item';
 import AsyncStorage from '@react-native-community/async-storage';
 import NotifService from './src/services/NotifService';
+//Redux
 import { createStore, applyMiddleware } from 'redux';
 import { Provider, connect } from 'react-redux';
+//middlewares
 import thunk from 'redux-thunk';
+import logger from 'redux-logger';
 import reducers from './src/reducers/reducer';
 import { loadData } from './src/reducers/reducer';
 
@@ -27,7 +30,7 @@ const instructions = Platform.select({
 });
 
 const AppContainer = createAppContainer(AppNavigator);
-const middleware = [ thunk ];
+const middleware = [ thunk, logger ];
 const store = createStore(reducers, applyMiddleware(...middleware));
 
 export default class inventoryApp extends Component {

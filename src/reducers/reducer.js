@@ -12,7 +12,7 @@ export const DELETE_ITEM = 'DELETE_ITEM';
 export const UPDATE_LIST = 'UPDATE_LIST';
 export const UPDATE_ITEM = 'UPDATE_ITEM';
 
-const initialState = { lists: [], list: {}, item: {} };
+const initialState = { lists: [], list: {}, item: {}, listIndex: 0 };
 
 //Reducer
 export default function reducer(state = initialState, action) {
@@ -27,9 +27,15 @@ export default function reducer(state = initialState, action) {
 				lists : [ ...state.lists, action.list ]
 			};
 		case GET_LIST:
+			let index = 0;
+			for (let i = 0; i < state.lists.length; i++) {
+				if (state.lists[i]._id == action.id) {
+					index = i;
+				}
+			}
 			return {
 				...state,
-				list : action.id
+				list : { ...state.lists[index] }
 			};
 		case DELETE_LIST:
 			return {

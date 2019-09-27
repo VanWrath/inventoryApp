@@ -15,7 +15,7 @@ import RNModal from 'react-native-modal';
 import ListItem from './ListItem';
 import GridItem from './GridItem';
 import { connect } from 'react-redux';
-import { deleteList } from '../reducers/reducer';
+import { deleteList, getList } from '../reducers/reducer';
 
 //Component to display collection of items
 class List extends Component {
@@ -23,7 +23,8 @@ class List extends Component {
 		super(props);
 
 		this.state = {
-			list        : this.props.navigation.getParam('collection').items,
+			id          : this.props.navigation.getParam('id'),
+			//list        : this.props.navigation.getParam('collection').items,
 			showOptions : false,
 			showFilter  : false,
 			listIndex   : this.props.navigation.getParam('index'),
@@ -38,7 +39,7 @@ class List extends Component {
 		const { params } = navigation.state;
 
 		return {
-			title       : params ? params.collection.name : '',
+			title       : params ? params.name : '',
 			headerRight : (
 				<View style={{ flexDirection: 'row' }}>
 					{/*Sort Button
@@ -69,13 +70,16 @@ class List extends Component {
 	};
 
 	componentDidMount() {
+		this.props.getList(this.state.id);
+		console.log('props: ' + JSON.stringify(this.props));
+		this.setState({ list: this.props.list.items });
 		this.props.navigation.setParams({ toggleOptions: this.toggleOptions });
 		this.setState({ outputList: this.state.list });
 	}
 
 	componentDidUpdate(prevProps) {
 		if (this.props !== prevProps) {
-			this.setState({ list: this.props.navigation.getParam('collection').items });
+			//this.setState({ list: this.props.state.lists[this.state.id].items });
 		}
 		//console.log('update list data: ' + JSON.stringify(this.state.list));
 	}
@@ -197,7 +201,8 @@ class List extends Component {
 
 	render() {
 		//const { navigation } = this.props;
-		var collection = this.props.navigation.getParam('collection');
+		//var collection = this.props.navigation.getParam('collection');
+		//let collection = this.props.state;
 		//console.log('Rendering list. list:' + JSON.stringify(this.state.list));
 		//console.log('--------------------------------------');
 		// console.log('Rendering list. outputlist:' + JSON.stringify(this.state.outputList));
@@ -369,13 +374,14 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => {
 	console.log('mapping to props: ' + JSON.stringify(state));
-	let storedCollections = state.lists.map((list) => ({ key: list._id, ...list }));
+	let storedList = Object.assign(state.list);
 	return {
-		lists : storedCollections
+		list : storedList
 	};
 };
 
 const mapDispatchToProps = {
+	getList,
 	deleteList
 };
 
