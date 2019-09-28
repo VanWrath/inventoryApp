@@ -1,5 +1,6 @@
 //Class to represent Items
 class item {
+	static id = 0;
 	//constructor takes in two strings, a name and brand.
 	constructor(name, brand) {
 		//Generate random id

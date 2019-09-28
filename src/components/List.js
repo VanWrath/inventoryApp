@@ -22,10 +22,12 @@ export default class List extends Component {
 
 		this.state = {
 			list        : this.props.navigation.getParam('collection').items,
+			outputList  : [],
 			showOptions : false,
 			showFilter  : false,
 			listIndex   : this.props.navigation.getParam('index'),
-			filterType  : 'brand'
+			filterType  : 'brand',
+			filterInput : ''
 		};
 		this.filterInput;
 	}
@@ -139,12 +141,13 @@ export default class List extends Component {
 	*	
 	*/
 	goToDetails = (item, index) => {
+		this.setState({ filterInput: '' });
+		this.setState({ outputList: this.state.list });
 		this.props.navigation.navigate('Details', {
 			data      : item,
 			//itemIndex : index,
 			listIndex : this.state.listIndex
 		});
-		console.log('rending details.');
 	};
 
 	//navigate to edit list page
@@ -178,10 +181,10 @@ export default class List extends Component {
 	};
 
 	filter = (input) => {
-		this.filterInput = input;
+		this.setState({ filterInput: input });
 		var array = this.state.list;
-		var filterArr = this.filterItems(array, this.filterInput);
-		if (this.filterInput.length > 0) {
+		var filterArr = this.filterItems(array, input);
+		if (input.length > 0) {
 			this.setState({ outputList: filterArr });
 		} else {
 			this.setState({ outputList: this.state.list });
@@ -197,7 +200,7 @@ export default class List extends Component {
 		// console.log('--------------------------------------');
 		//console.log('List props: ' + JSON.stringify(collection));
 		//console.log('--------------------------------------');
-		this.setState({ outputList });
+		//this.setState({ outputList });
 
 		return (
 			<View style={styles.container}>

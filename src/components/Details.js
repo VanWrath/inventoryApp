@@ -49,12 +49,14 @@ export default class Details extends Component {
 
 	componentDidUpdate(prevProps) {
 		if (this.props !== prevProps) {
-			console.log('this.props: ' + JSON.stringify(this.props.navigation));
+			console.log('this.props: ' + JSON.stringify(this.props.navigation.state.params));
 			console.log('--------------------------');
-			console.log('prevProps: ' + JSON.stringify(prevProps.navigation));
+			console.log('prevProps: ' + JSON.stringify(prevProps.navigation.state.params));
 			console.log('--------------------------');
 			//this.props.navigation.setParams({ data: this.props.navigate.getParam('data') });
+
 			this.setState({ data: this.props.navigation.getParam('data') });
+
 			//console.log('updating details data: ' + JSON.stringify(this.state.data));
 		}
 	}
