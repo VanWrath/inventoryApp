@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import {
+	ActionSheetIOS,
 	Alert,
 	Button,
 	FlatList,
 	Image,
 	Picker,
+	Platform,
 	StyleSheet,
 	Text,
 	TextInput,
@@ -21,15 +23,17 @@ export default class List extends Component {
 		super(props);
 
 		this.state = {
-			list        : this.props.navigation.getParam('collection').items,
-			outputList  : [],
-			showOptions : false,
-			showFilter  : false,
-			listIndex   : this.props.navigation.getParam('index'),
-			filterType  : 'brand',
-			filterInput : ''
+			list             : this.props.navigation.getParam('collection').items,
+			outputList       : [],
+			showOptions      : false,
+			showFilter       : false,
+			listIndex        : this.props.navigation.getParam('index'),
+			filterType       : 'brand',
+			filterTypeText   : 'Brand',
+			filterInput      : '',
+			actionSheetItems : [ 'Brand', 'Main Category', 'Sub Category', 'Vendor', 'Cancel' ]
 		};
-		this.filterInput;
+		//this.filterInput;
 	}
 
 	static navigationOptions = ({ navigation, navigationOptions }) => {
@@ -191,8 +195,41 @@ export default class List extends Component {
 		}
 	};
 
+	showActionSheet = () => {
+		ActionSheetIOS.showActionSheetWithOptions(
+			{
+				options           : this.state.actionSheetItems,
+				//destructiveButtonIndex : 4,
+				cancelButtonIndex : 4
+			},
+			(buttonIndex) => {
+				if (buttonIndex !== 4) {
+					this.setState({ filterTypeText: this.state.actionSheetItems[buttonIndex] });
+				}
+				switch (buttonIndex) {
+					case 0:
+						this.setState({ filterType: 'brand' });
+						break;
+					case 1:
+						this.setState({ filterType: 'mainCategory' });
+						break;
+					case 2:
+						this.setState({ filterType: 'subCategory' });
+						break;
+					case 3:
+						this.setState({ filterType: 'vendor' });
+						break;
+					case 4:
+						break;
+					default:
+						this.setState({ filterType: 'brand' });
+						break;
+				}
+			}
+		);
+	};
+
 	render() {
-		//const { navigation } = this.props;
 		var collection = this.props.navigation.getParam('collection');
 		//console.log('Rendering list. list:' + JSON.stringify(this.state.list));
 		//console.log('--------------------------------------');
@@ -209,20 +246,30 @@ export default class List extends Component {
 					<TouchableOpacity onPress={() => this.toggleFilter()}>
 						<Text style={styles.filterLabel}>Filter</Text>
 					</TouchableOpacity>
+
 					<View style={[ this.state.showFilter ? { display: 'flex' } : { display: 'none' } ]}>
-						<Picker
-							selectedValue={this.state.filterType}
-							style={styles.picker}
-							itemStyle={styles.pickerItems}
-							onValueChange={(itemValue, itemIndex) => {
-								this.setState({ filterType: itemValue });
-							}}
-						>
-							<Picker.Item label="Brand" value="brand" />
-							<Picker.Item label="Main Category" value="mainCategory" />
-							<Picker.Item label="Sub Category" value="subCategory" />
-							<Picker.Item label="Vendor" value="vendor" />
-						</Picker>
+						{Platform.select({
+							ios     : (
+								<TouchableOpacity onPress={() => this.showActionSheet()}>
+									<Text>{this.state.filterTypeText}</Text>
+								</TouchableOpacity>
+							),
+							android : (
+								<Picker
+									selectedValue={this.state.filterType}
+									style={styles.picker}
+									itemStyle={styles.pickerItems}
+									onValueChange={(itemValue, itemIndex) => {
+										this.setState({ filterType: itemValue });
+									}}
+								>
+									<Picker.Item label="Brand" value="brand" />
+									<Picker.Item label="Main Category" value="mainCategory" />
+									<Picker.Item label="Sub Category" value="subCategory" />
+									<Picker.Item label="Vendor" value="vendor" />
+								</Picker>
+							)
+						})}
 
 						<TextInput
 							style={styles.textField}
