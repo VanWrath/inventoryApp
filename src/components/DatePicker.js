@@ -19,7 +19,8 @@ export default class DatePicker extends Component {
 		this.hasDate = PropDate == null ? false : true;
 		//console.log('hasDate: ' + this.hasDate);
 		this.state = {
-			date : this.hasDate ? PropDate : new Date()
+			date              : this.hasDate ? PropDate : new Date(),
+			datePickerVisible : false
 		};
 		this.datePickerAndroid = this.datePickerAndroid.bind(this);
 		//console.log('hasDate: ' + this.state.hasDate);
@@ -54,9 +55,20 @@ export default class DatePicker extends Component {
 		this.changeDate(null);
 	};
 
+	toggleDatePicker = () => {
+		this.setState({ toggleDatePicker: !this.state.datePickerVisible });
+	};
+
 	render() {
 		return Platform.select({
-			ios     : <DatePickerIOS date={this.state.date} onDateChange={this.changeDate} />,
+			ios     : (
+				<TouchableOpacity onPress={this.toggleDatePicker}>
+					<Text>{this.state.date}</Text>
+					<View style={[ this.state.datePickerVisible ? { display: 'flex' } : { display: 'none' } ]}>
+						<DatePickerIOS date={this.state.date} onDateChange={this.changeDate} />
+					</View>
+				</TouchableOpacity>
+			),
 			android : (
 				<View style={styles.view}>
 					<TouchableOpacity onPress={this.datePickerAndroid}>

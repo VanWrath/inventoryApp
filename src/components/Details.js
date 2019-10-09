@@ -155,7 +155,7 @@ export default class Details extends Component {
 const styles = StyleSheet.create({
 	container   : {
 		flex            : 1,
-		backgroundColor : '#F5FCFF'
+		backgroundColor : '#ffffff'
 	},
 	text        : {
 		fontSize : 20,
