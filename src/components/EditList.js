@@ -48,7 +48,11 @@ export default class EditList extends Component {
 					/>
 				</View>
 
-				<Button title="Update" onPress={this.submit} color="#33cc33" />
+				<Button 
+				title="Update" 
+				onPress={this.submit} 
+				//color="#33cc33" 
+				/>
 			</View>
 		);
 	}

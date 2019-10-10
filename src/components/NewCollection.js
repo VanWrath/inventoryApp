@@ -41,7 +41,11 @@ export default class NewCollection extends Component {
 					/>
 				</View>
 
-				<Button title="Add" onPress={this.submit} color="#33cc33" />
+				<Button 
+				title="Add" 
+				onPress={this.submit} 
+				//color="#33cc33" 
+				/>
 			</View>
 		);
 	}

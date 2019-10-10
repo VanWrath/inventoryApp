@@ -30,6 +30,11 @@ export default class DatePicker extends Component {
 		this.props.setFunction(this.props.dateProp, date);
 	};
 
+	onChangeDateIOS = (newDate) => {
+		this.setState({date : newDate});
+		this.changeDate(newDate);
+	}
+
 	async datePickerAndroid() {
 		try {
 			//var today = new Date();
@@ -56,16 +61,16 @@ export default class DatePicker extends Component {
 	};
 
 	toggleDatePicker = () => {
-		this.setState({ toggleDatePicker: !this.state.datePickerVisible });
+		this.setState({ datePickerVisible: !this.state.datePickerVisible });
 	};
 
 	render() {
 		return Platform.select({
 			ios     : (
 				<TouchableOpacity onPress={this.toggleDatePicker}>
-					<Text>{this.state.date}</Text>
+					<Text>{this.state.date.toDateString()}</Text>
 					<View style={[ this.state.datePickerVisible ? { display: 'flex' } : { display: 'none' } ]}>
-						<DatePickerIOS date={this.state.date} onDateChange={this.changeDate} />
+						<DatePickerIOS date={this.state.date} onDateChange={this.changeDateIOS} />
 					</View>
 				</TouchableOpacity>
 			),
