@@ -3,6 +3,7 @@ package com.inventoryapp;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.reactcommunity.rndatetimepicker.RNDateTimePickerPackage;
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import org.reactnative.camera.RNCameraPackage;
@@ -27,6 +28,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNDateTimePickerPackage(),
             new ReactNativePushNotificationPackage(),
             new AsyncStoragePackage(),
             new RNCameraPackage(),

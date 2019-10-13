@@ -9,14 +9,14 @@ import {
 	Button,
 	TextInput,
 	ScrollView,
-	DatePickerIOS,
-	DatePickerAndroid,
 	TouchableOpacity,
 	Switch
 } from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import Item from '../classes/Item';
 import ImagePicker from './ImagePicker';
 import DatePicker from './DatePicker';
+import CustomDatePicker from './customDatePicker';
 
 const defaultImage = require('../../images/default.jpg');
 
@@ -27,23 +27,27 @@ export default class NewItem extends Component {
 		const { navigation } = this.props;
 		this.collection = navigation.getParam('collection', '');
 		this.state = {
-			name            : '',
-			brand           : '',
-			details         : '',
-			mainCategory    : '',
-			subCategory     : '',
-			size            : '',
-			vendor          : '',
-			price           : 0.0,
-			acquisitionDate : null,
-			startDate       : null,
-			completionDate  : null,
-			expiryDate      : null,
-			maxUse          : 0,
-			repurchaseItem  : false,
-			notes           : '',
-			photo           : defaultImage,
-			listIndex       : navigation.getParam('index')
+			name               : '',
+			brand              : '',
+			details            : '',
+			mainCategory       : '',
+			subCategory        : '',
+			size               : '',
+			vendor             : '',
+			price              : 0.0,
+			acquisitionDate    : 'Not Set',
+			startDate          : 'Not Set',
+			completionDate     : 'Not Set',
+			expiryDate         : 'Not Set',
+			maxUse             : 0,
+			repurchaseItem     : false,
+			notes              : '',
+			photo              : defaultImage,
+			listIndex          : navigation.getParam('index'),
+			datePickerVisible1 : false,
+			datePickerVisible2 : false,
+			datePickerVisible3 : false,
+			datePickerVisible4 : false
 		};
 	}
 	static navigationOptions = ({ navigation, navigationOptions }) => {
@@ -59,8 +63,10 @@ export default class NewItem extends Component {
 	};
 
 	//changes the date of the specified state
-	setDate = (dateProp, date) => {
-		this.setState({ [dateProp]: date });
+	setDate = (date, dateName) => {
+		this.setState({
+			[dateName] : date
+		});
 	};
 
 	setNotification = () => {
@@ -84,25 +90,18 @@ export default class NewItem extends Component {
 			newItem.setVendor(this.state.vendor);
 			newItem.setPrice(this.state.price);
 			newItem.setNote(this.state.notes);
-			if (this.state.acquisitionDate !== null) {
+			if (this.state.acquisitionDate instanceof Date) {
+				console.log('Setting Acquisition date.');
 				newItem.setAcquisitionDate(this.state.acquisitionDate.toDateString());
-			} else {
-				newItem.setAcquisitionDate('Not Set');
 			}
-			if (this.state.startDate !== null) {
+			if (this.state.startDate instanceof Date) {
 				newItem.setStartDate(this.state.startDate.toDateString());
-			} else {
-				newItem.setStartDate('Not Set');
 			}
-			if (this.state.completionDate !== null) {
+			if (this.state.completionDate instanceof Date) {
 				newItem.setCompletionDate(this.state.completionDate.toDateString());
-			} else {
-				newItem.setCompletionDate('Not Set');
 			}
-			if (this.state.expiryDate !== null) {
+			if (this.state.expiryDate instanceof Date) {
 				newItem.setExpiryDate(this.state.expiryDate.toDateString());
-			} else {
-				newItem.setExpiryDate('Not Set');
 			}
 			newItem.setMaxUse(this.state.maxUse);
 			newItem.setRepurchaseItem(this.state.repurchaseItem);
@@ -255,17 +254,17 @@ export default class NewItem extends Component {
 						/>
 					</View>
 
-					<Text style={styles.label}>Aquisition Date: </Text>
-					<DatePicker dateProp={'acquisitionDate'} setFunction={this.setDate} />
+					<Text style={styles.label}>Acquisition Date: </Text>
+					<CustomDatePicker onChange={this.setDate} stateName={'acquisitionDate'} />
 
 					<Text style={styles.label}>Start Date: </Text>
-					<DatePicker dateProp={'startDate'} setFunction={this.setDate} />
+					<CustomDatePicker onChange={this.setDate} stateName={'startDate'} />
 
 					<Text style={styles.label}>Completion Date: </Text>
-					<DatePicker dateProp={'completionDate'} setFunction={this.setDate} />
+					<CustomDatePicker onChange={this.setDate} stateName={'completionDate'} />
 
 					<Text style={styles.label}>Expiry Date: </Text>
-					<DatePicker dateProp={'expiryDate'} setFunction={this.setDate} />
+					<CustomDatePicker onChange={this.setDate} stateName={'expiryDate'} />
 
 					<View style={styles.section}>
 						<Text style={styles.label}>Max Use: </Text>

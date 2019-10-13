@@ -15,6 +15,7 @@ import {
 import Item from '../classes/Item';
 import ImagePicker from './ImagePicker';
 import DatePicker from './DatePicker';
+import CustomDatePicker from './customDatePicker';
 
 //Component renders screen to take in user input to create a new item record.
 export default class EditItem extends Component {
@@ -41,12 +42,14 @@ export default class EditItem extends Component {
 			//itemIndex      : this.props.navigation.getParam('itemIndex'),
 			listIndex      : this.props.navigation.getParam('listIndex')
 		};
-
+		console.log('completion date: ' + this.item.completionDate);
 		this.state.acquisitionDate =
-			this.item.acquisitionDate == 'Not Set' ? null : new Date(this.item.acquisitionDate);
-		this.state.startDate = this.item.startDate == 'Not Set' ? null : new Date(this.item.startDate);
-		this.state.completionDate = this.item.completionDate == 'Not Set' ? null : new Date(this.item.completionDate);
-		this.state.expiryDate = this.item.expiryDate == 'Not Set' ? null : new Date(this.item.expiryDate);
+			this.item.acquisitionDate == 'Not Set' ? this.item.acquisitionDate : new Date(this.item.acquisitionDate);
+		this.state.startDate = this.item.startDate == 'Not Set' ? this.item.startDate : new Date(this.item.startDate);
+		this.state.completionDate =
+			this.item.completionDate == 'Not Set' ? this.item.completionDate : new Date(this.item.completionDate);
+		this.state.expiryDate =
+			this.item.expiryDate == 'Not Set' ? this.item.expiryDate : new Date(this.item.expiryDate);
 	}
 
 	static navigationOptions = ({ navigation, navigationOptions }) => {
@@ -62,10 +65,11 @@ export default class EditItem extends Component {
 	};
 
 	//changes the date of the specified state
-	setDate = (dateProp, date) => {
-		this.setState({ [dateProp]: date });
+	setDate = (date, dateName) => {
+		this.setState({
+			[dateName] : date
+		});
 	};
-
 	setNotification = () => {
 		var notifDate;
 		if (this.state.completionDate > Date.now() && this.state.completionDate < this.state.expiryDate) {
@@ -88,25 +92,17 @@ export default class EditItem extends Component {
 			updateItem.setVendor(this.state.vendor);
 			updateItem.setPrice(this.state.price);
 			updateItem.setNote(this.state.notes);
-			if (this.state.acquisitionDate !== null) {
+			if (this.state.acquisitionDate instanceof Date) {
 				updateItem.setAcquisitionDate(this.state.acquisitionDate.toDateString());
-			} else {
-				updateItem.setAcquisitionDate('Not Set');
 			}
-			if (this.state.startDate !== null) {
+			if (this.state.startDate instanceof Date) {
 				updateItem.setStartDate(this.state.startDate.toDateString());
-			} else {
-				updateItem.setStartDate('Not Set');
 			}
-			if (this.state.completionDate !== null) {
+			if (this.state.completionDate instanceof Date) {
 				updateItem.setCompletionDate(this.state.completionDate.toDateString());
-			} else {
-				updateItem.setCompletionDate('Not Set');
 			}
-			if (this.state.expiryDate !== null) {
+			if (this.state.expiryDate instanceof Date) {
 				updateItem.setExpiryDate(this.state.expiryDate.toDateString());
-			} else {
-				updateItem.setExpiryDate('Not Set');
 			}
 			updateItem.setMaxUse(this.state.maxUse);
 			updateItem.setRepurchaseItem(this.state.repurchaseItem);
@@ -265,7 +261,7 @@ export default class EditItem extends Component {
 						/>
 					</View>
 
-					<Text style={styles.label}>Aquisition Date: </Text>
+					{/* <Text style={styles.label}>Aquisition Date: </Text>
 					<DatePicker
 						date={this.state.acquisitionDate}
 						dateProp={'acquisitionDate'}
@@ -283,7 +279,27 @@ export default class EditItem extends Component {
 					/>
 
 					<Text style={styles.label}>Expiry Date: </Text>
-					<DatePicker date={this.state.expiryDate} dateProp={'expiryDate'} setFunction={this.setDate} />
+					<DatePicker date={this.state.expiryDate} dateProp={'expiryDate'} setFunction={this.setDate} /> */}
+
+					<Text style={styles.label}>Acquisition Date: </Text>
+					<CustomDatePicker
+						date={this.state.acquisitionDate}
+						onChange={this.setDate}
+						stateName={'acquisitionDate'}
+					/>
+
+					<Text style={styles.label}>Start Date: </Text>
+					<CustomDatePicker date={this.state.startDate} onChange={this.setDate} stateName={'startDate'} />
+
+					<Text style={styles.label}>Completion Date: </Text>
+					<CustomDatePicker
+						date={this.state.completionDate}
+						onChange={this.setDate}
+						stateName={'completionDate'}
+					/>
+
+					<Text style={styles.label}>Expiry Date: </Text>
+					<CustomDatePicker date={this.state.expiryDate} onChange={this.setDate} stateName={'expiryDate'} />
 
 					<View style={styles.section}>
 						<Text style={styles.label}>Max Use: </Text>

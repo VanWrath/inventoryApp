@@ -391,7 +391,7 @@ const styles = StyleSheet.create({
 		height          : 40,
 		alignSelf       : 'center',
 		width           : '90%',
-		backgroundColor : '#eff'
+		backgroundColor : '#eee'
 	},
 	textField       : {
 		alignSelf       : 'center',

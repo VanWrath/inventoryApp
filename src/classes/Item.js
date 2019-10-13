@@ -8,10 +8,10 @@ class item {
 
 		this.name = name;
 		this.brand = brand;
-		this.acquisitionDate = 'Not set';
-		this.startDate = 'Not set';
-		this.completionDate = 'Not set';
-		this.expiryDate = 'Not set';
+		this.acquisitionDate = 'Not Set';
+		this.startDate = 'Not Set';
+		this.completionDate = 'Not Set';
+		this.expiryDate = 'Not Set';
 		this.count = 1;
 	}
 
