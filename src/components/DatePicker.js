@@ -70,7 +70,7 @@ export default class DatePicker extends Component {
 				<TouchableOpacity onPress={this.toggleDatePicker}>
 					<Text>{this.state.date.toDateString()}</Text>
 					<View style={[ this.state.datePickerVisible ? { display: 'flex' } : { display: 'none' } ]}>
-						<DatePickerIOS date={this.state.date} onDateChange={this.changeDateIOS} />
+						<DatePickerIOS date={this.state.date} onDateChange={this.onChangeDateIOS} mode={'date'} />
 					</View>
 				</TouchableOpacity>
 			),
