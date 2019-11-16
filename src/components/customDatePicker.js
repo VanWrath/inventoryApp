@@ -29,6 +29,7 @@ export default class customDatePicker extends Component {
 	};
 
 	render() {
+		console.log("Date: " + this.state.date);
 		return (
 			<View style={styles.container}>
 				<TouchableOpacity onPress={this.show}>
