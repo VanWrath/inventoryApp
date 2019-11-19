@@ -9,11 +9,6 @@ target 'inventoryApp' do
 
   # Pods for inventoryApp
 
-  target 'inventoryApp-tvOSTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
-
   target 'inventoryAppTests' do
     inherit! :search_paths
     # Pods for testing
