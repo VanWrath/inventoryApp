@@ -251,7 +251,7 @@ export default class List extends Component {
 						{Platform.select({
 							ios     : (
 								<TouchableOpacity onPress={() => this.showActionSheet()}>
-									<Text>{this.state.filterTypeText}</Text>
+									<Text style={styles.pickerLabel}>{this.state.filterTypeText}</Text>
 								</TouchableOpacity>
 							),
 							android : (
@@ -392,6 +392,12 @@ const styles = StyleSheet.create({
 		alignSelf       : 'center',
 		width           : '90%',
 		backgroundColor : '#eff'
+	},
+	pickerLabel:{
+		fontWeight: 'bold',
+		fontSize: 16,
+		marginLeft: 20
+
 	},
 	textField       : {
 		alignSelf       : 'center',
