@@ -638,7 +638,6 @@
 				E08160310E409468F59FC04C /* Pods-inventoryAppTests.debug.xcconfig */,
 				9F2A056A66BCDF886F5327BD /* Pods-inventoryAppTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -1639,6 +1638,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.inventoryApp;
 				PRODUCT_NAME = inventoryApp;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1669,6 +1669,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.inventoryApp;
 				PRODUCT_NAME = inventoryApp;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
